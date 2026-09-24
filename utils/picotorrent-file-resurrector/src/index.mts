@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import { config } from "dotenv";
-import {container} from "tsyringe";
-import {PicotorrentFileResurrector} from "./picotorrent-file-resurrector.mjs";
-import {InjectionToken} from "./injection-token.enum.mjs";
+import { container } from "tsyringe";
+import { PicotorrentFileResurrector } from "./picotorrent-file-resurrector.mjs";
+import { InjectionToken } from "./injection-token.enum.mjs";
 
 config();
 
@@ -13,7 +13,7 @@ container.register(InjectionToken.BaseOutputDirectoryPath, { useValue: process.e
 try {
   const picotorrentFileResurrector: PicotorrentFileResurrector = container.resolve(PicotorrentFileResurrector);
   const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Torrent data extraction timed out")), 30_000)
+    setTimeout(() => reject(new Error("Torrent data extraction timed out")), 30_000),
   );
   await Promise.race([picotorrentFileResurrector.extract(), timeout]);
 } catch (err) {

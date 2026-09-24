@@ -1,11 +1,11 @@
 import "reflect-metadata";
 
-import sqlite3 from "sqlite3"
+import sqlite3 from "sqlite3";
 import { type Database, open } from "sqlite";
 import path from "node:path";
 import { writeFileSync } from "node:fs";
-import {inject, injectable} from "tsyringe";
-import {InjectionToken} from "./injection-token.enum.mjs";
+import { inject, injectable } from "tsyringe";
+import { InjectionToken } from "./injection-token.enum.mjs";
 
 interface TorrentMetadata {
   info_hash?: string;
@@ -27,11 +27,8 @@ interface TorrentMetadata {
 export class PicotorrentFileResurrector {
   constructor(
     @inject(InjectionToken.BaseOutputDirectoryPath) private readonly baseOutputDirPath: string,
-    @inject(InjectionToken.DbFilePath) private readonly dbFilePath: string
-  ) {
-    console.log("baseOutputDirPath: ", this.baseOutputDirPath);
-    console.log("dbFilePath: ", this.dbFilePath);
-  }
+    @inject(InjectionToken.DbFilePath) private readonly dbFilePath: string,
+  ) {}
 
   async extract(): Promise<void> {
     console.log(`Starting torrent file extraction using DB at "${this.dbFilePath}".`);
@@ -43,16 +40,19 @@ export class PicotorrentFileResurrector {
         mode: sqlite3.OPEN_READONLY,
       });
 
-      await db.each<TorrentMetadata>("select info_hash, resume_data from torrent_resume_data", (err, {info_hash: infoHash = "", resume_data: resumeData = ""}) => {
-        if (!err) {
-          const outputDir: string = this.baseOutputDirPath;
-          const filePath: string = path.join(outputDir, `${infoHash}.torrent`);
-          writeFileSync(filePath, resumeData);
-          console.log(`Torrent file created in "${outputDir}" for torrent with info has "${infoHash}".`);
-        } else {
-          console.error("An error occurred during torrent data extraction: error: ", err);
-        }
-      });
+      await db.each<TorrentMetadata>(
+        "select info_hash, resume_data from torrent_resume_data",
+        (err, { info_hash: infoHash = "", resume_data: resumeData = "" }) => {
+          if (!err) {
+            const outputDir: string = this.baseOutputDirPath;
+            const filePath: string = path.join(outputDir, `${infoHash}.torrent`);
+            writeFileSync(filePath, resumeData);
+            console.log(`Torrent file created in "${outputDir}" for torrent with info has "${infoHash}".`);
+          } else {
+            console.error("An error occurred during torrent data extraction: error: ", err);
+          }
+        },
+      );
     } catch (err) {
       console.error("An error occurred during torrent data extraction: error: ", err);
     } finally {
