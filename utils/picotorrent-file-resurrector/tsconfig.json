@@ -19,7 +19,8 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "allowImportingTsExtensions": true
   },
   "include": ["**/*.mts"],
   "exclude": ["**/*.spec.mts"]

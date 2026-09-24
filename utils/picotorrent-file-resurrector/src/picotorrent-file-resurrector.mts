@@ -1,11 +1,12 @@
 import "reflect-metadata";
 
-import sqlite3 from "sqlite3";
-import { type Database, open } from "sqlite";
 import path from "node:path";
 import { writeFileSync } from "node:fs";
+import { type Database, open } from "sqlite";
+import sqlite3 from "sqlite3";
 import { inject, injectable } from "tsyringe";
-import { InjectionToken } from "./injection-token.enum.mjs";
+
+import { InjectionToken } from "./injection-token.enum.mts";
 
 interface TorrentMetadata {
   info_hash?: string;
@@ -25,10 +26,14 @@ interface TorrentMetadata {
  */
 @injectable()
 export class PicotorrentFileResurrector {
+  private readonly statementQuery: string = "select info_hash, resume_data from torrent_resume_data";
+
   constructor(
     @inject(InjectionToken.BaseOutputDirectoryPath) private readonly baseOutputDirPath: string,
     @inject(InjectionToken.DbFilePath) private readonly dbFilePath: string,
-  ) {}
+  ) {
+    console.log("dbFilePath: ", this.dbFilePath);
+  }
 
   async extract(): Promise<void> {
     console.log(`Starting torrent file extraction using DB at "${this.dbFilePath}".`);
@@ -41,7 +46,7 @@ export class PicotorrentFileResurrector {
       });
 
       await db.each<TorrentMetadata>(
-        "select info_hash, resume_data from torrent_resume_data",
+        this.statementQuery,
         (err, { info_hash: infoHash = "", resume_data: resumeData = "" }) => {
           if (!err) {
             const outputDir: string = this.baseOutputDirPath;
