@@ -2,9 +2,10 @@
   "name": "picotorrent-file-resurrector",
   "description": "Create torrent files from torrent data already downloaded by PicoTorrent.",
   "version": "0.0.1",
-  "main": "src/index.ts",
+  "main": "src/index.mts",
   "type": "module",
   "scripts": {
+    "lint": "eslint",
     "test": "vitest"
   },
   "author": "Ross Moug",
@@ -16,12 +17,23 @@
     "tsyringe": "^4.10.0"
   },
   "devDependencies": {
-    "@types/node": "^26.6.2",
-    "eslint": "^9.39.5",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.13.6",
+    "@typescript-eslint/eslint-plugin": "^8.70.1",
+    "@typescript-eslint/parser": "^8.70.1",
+    "@vitest/eslint-plugin": "^1.6.27",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-config-typescript": "^3.0.0",
+    "jiti": "^2.7.0",
     "prettier": "^3.9.9",
     "sqlite3": "^6.0.1",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.70.1",
     "vitest": "^5.0.1"
+  },
+  "engines": {
+    "node": "24"
   }
 }

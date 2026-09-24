@@ -5,7 +5,7 @@ import { type Database, open } from "sqlite";
 import path from "node:path";
 import { writeFileSync } from "node:fs";
 import {inject, injectable} from "tsyringe";
-import {InjectionToken} from "./injection-token.enun.js";
+import {InjectionToken} from "./injection-token.enum.mjs";
 
 interface TorrentMetadata {
   info_hash?: string;

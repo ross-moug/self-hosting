@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import { config } from "dotenv";
 import {container} from "tsyringe";
-import {PicotorrentFileResurrector} from "./picotorrent-file-resurrector.js";
-import {InjectionToken} from "./injection-token.enun.js";
+import {PicotorrentFileResurrector} from "./picotorrent-file-resurrector.mjs";
+import {InjectionToken} from "./injection-token.enum.mjs";
 
 config();
 
