@@ -2,15 +2,18 @@
   "name": "picotorrent-file-resurrector",
   "description": "Create torrent files from torrent data already downloaded by PicoTorrent.",
   "version": "0.0.1",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest"
   },
   "author": "Ross Moug",
   "license": "ISC",
   "dependencies": {
-    "sqlite": "^5.1.1"
+    "dotenv": "^18.0.3",
+    "reflect-metadata": "^0.2.2",
+    "sqlite": "^5.1.1",
+    "tsyringe": "^4.10.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
@@ -18,6 +21,7 @@
     "prettier": "^3.9.9",
     "sqlite3": "^6.0.1",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.1"
   }
 }
