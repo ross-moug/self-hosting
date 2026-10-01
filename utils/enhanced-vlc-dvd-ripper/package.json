@@ -1,0 +1,38 @@
+{
+  "name": "enhanced-vlc-dvd-ripper",
+  "description": "Sequentially rip multiple titles from a DVD using VLC.",
+  "version": "0.0.1",
+  "main": "src/index.mts",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint --fix",
+    "test": "vitest"
+  },
+  "author": "Ross Moug",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^18.0.3",
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.10.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.13.6",
+    "@typescript-eslint/eslint-plugin": "^8.70.1",
+    "@typescript-eslint/parser": "^8.70.1",
+    "@vitest/eslint-plugin": "^1.6.27",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-config-typescript": "^3.0.0",
+    "eslint-plugin-prettier": "^5.5.6",
+    "jiti": "^2.7.0",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.70.1",
+    "vitest": "^5.0.1"
+  },
+  "engines": {
+    "node": "24"
+  }
+}

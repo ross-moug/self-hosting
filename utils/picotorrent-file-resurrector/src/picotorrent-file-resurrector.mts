@@ -31,9 +31,7 @@ export class PicotorrentFileResurrector {
   constructor(
     @inject(InjectionToken.BaseOutputDirectoryPath) private readonly baseOutputDirPath: string,
     @inject(InjectionToken.DbFilePath) private readonly dbFilePath: string,
-  ) {
-    console.log("dbFilePath: ", this.dbFilePath);
-  }
+  ) {}
 
   async extract(): Promise<void> {
     console.log(`Starting torrent file extraction using DB at "${this.dbFilePath}".`);
