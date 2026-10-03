@@ -11,17 +11,18 @@
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
 
-
     "strict": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
   },
-  "include": ["**/*.mts"],
+  "include": ["**/*.mts", "**/*.d.ts"],
   "exclude": ["**/*.spec.mts"]
 }

@@ -3,6 +3,7 @@ import "reflect-metadata";
 import { inject, injectable } from "tsyringe";
 
 import { Vlc } from "./vlc.mts";
+import { DiscDrive } from "./disc-drive.mts";
 
 interface RippingOptions {
   season: number;
@@ -11,13 +12,20 @@ interface RippingOptions {
 }
 
 /**
- *
+ * TODO
+ * - Film support
+ * - Tests
+ * - Pull episode from online DB
+ * - Notification
  */
 @injectable()
 export class EnhancedDvdRipper {
-  constructor(@inject(Vlc) private readonly vlc: Vlc) {}
+  constructor(
+    @inject(Vlc) private readonly vlc: Vlc,
+    @inject(DiscDrive) private readonly discDrive: DiscDrive,
+  ) {}
 
-  rip(options: RippingOptions): void {
+  async rip(options: RippingOptions): Promise<void> {
     try {
       console.log(`Ripping DVD for season ${options.season} starting at episode ${options.startingEpisode}.`);
 
@@ -39,6 +47,8 @@ export class EnhancedDvdRipper {
 
         console.log(`Ripping of season ${options.season}, episode ${episodeNumber} complete.`);
       }
+
+      await this.discDrive.eject();
     } catch (err) {
       console.error("An error occurred during torrent data extraction: error: ", err);
     }
