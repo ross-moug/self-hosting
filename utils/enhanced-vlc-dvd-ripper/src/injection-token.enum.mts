@@ -4,5 +4,6 @@ export enum InjectionToken {
   OutputDirectoryPath = "OUTPUT_DIRECTORY_PATH",
   Season = "SEASON",
   StartingEpisode = "STARTING_EPISODE",
+  Title = "TITLE",
   VlcExecutablePath = "VLC_EXECUTABLE_PATH",
 }
