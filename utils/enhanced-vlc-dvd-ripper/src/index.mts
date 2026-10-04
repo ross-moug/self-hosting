@@ -16,6 +16,7 @@ container.register(InjectionToken.OutputDirectoryPath, {
 container.register(InjectionToken.Season, { useValue: process.env.SEASON });
 container.register(InjectionToken.StartingEpisode, { useValue: process.env.STARTING_EPISODE });
 container.register(InjectionToken.Title, { useValue: process.env.TITLE });
+container.register(InjectionToken.TvdbApiKey, { useValue: process.env.TVDB_API_KEY });
 container.register(InjectionToken.VlcExecutablePath, { useValue: process.env.VLC_EXECUTABLE_PATH });
 
 try {

@@ -5,5 +5,6 @@ export enum InjectionToken {
   Season = "SEASON",
   StartingEpisode = "STARTING_EPISODE",
   Title = "TITLE",
+  TvdbApiKey = "TVDB_API_KEY",
   VlcExecutablePath = "VLC_EXECUTABLE_PATH",
 }

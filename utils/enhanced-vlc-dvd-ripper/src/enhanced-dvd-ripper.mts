@@ -3,8 +3,9 @@ import "reflect-metadata";
 import notifier from "node-notifier";
 import { inject, injectable } from "tsyringe";
 
-import { Vlc } from "./vlc.mts";
 import { DiscDrive } from "./disc-drive.mts";
+import { TvdbClient } from "./tvdb-client.mts";
+import { Vlc } from "./vlc.mts";
 
 interface RippingOptions {
   episodeCountPerDisc: number;
@@ -17,13 +18,13 @@ interface RippingOptions {
  * TODO
  * - Film support
  * - Tests
- * - Pull episode from online DB
  */
 @injectable()
 export class EnhancedDvdRipper {
   constructor(
     @inject(Vlc) private readonly vlc: Vlc,
     @inject(DiscDrive) private readonly discDrive: DiscDrive,
+    @inject(TvdbClient) private readonly tvdbClient: TvdbClient,
   ) {}
 
   async rip(options: RippingOptions): Promise<void> {
@@ -31,19 +32,22 @@ export class EnhancedDvdRipper {
       console.log(`Ripping DVD for season ${options.season} starting at episode ${options.startingEpisode}.`);
 
       const startingEpisodePosition = Number(options.startingEpisode);
-      const episodes: number[] = Array.from(
-        new Array(Number(options.episodeCountPerDisc)),
-        (_, index) => startingEpisodePosition + index,
+      const episodes: { episodeNumber: number; title: string }[] = await Promise.all(
+        Array.from(new Array(Number(options.episodeCountPerDisc)), async (_, index) => ({
+          episodeNumber: startingEpisodePosition + index,
+          title: await this.tvdbClient.getEpisodeTitle(options.title, options.season, startingEpisodePosition + index),
+        })),
       );
 
-      for (const episodeNumber of episodes) {
+      for (const { episodeNumber, title: episodeTitle } of episodes) {
         console.log(`Start rip of season ${options.season}, episode ${episodeNumber}.`);
-        const index: number = episodes.indexOf(episodeNumber);
+        const index: number = episodes.findIndex((episode) => episodeNumber == episode.episodeNumber);
 
         this.vlc.execute({
           season: options.season,
           episodeNumber,
-          title: index + 2,
+          episodeTitle,
+          title: index + 1,
         });
 
         console.log(`Ripping of season ${options.season}, episode ${episodeNumber} complete.`);
