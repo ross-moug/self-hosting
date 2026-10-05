@@ -7,6 +7,7 @@ import type { VlcOptions } from "./vlc-options.mts";
 export class VlcCommandFactory {
   private readonly episodeNumberLength: number = 2;
   private readonly episodePaddingCharacter: string = "0";
+  private readonly runTimePaddingFactor: number = 0.1;
 
   constructor(
     @inject(InjectionToken.VlcExecutablePath) private readonly vlcExecutablePath: string,
@@ -14,7 +15,7 @@ export class VlcCommandFactory {
   ) {}
 
   create(options: VlcOptions): string {
-    return `"${this.vlcExecutablePath}" --one-instance --no-loop "dvdsimple:///F:/#${options.title}" --no-sout-all --audio-language=eng --sub-language=eng --avcodec-hw=none --play-and-exit --sout=#transcode{vcodec=h264,acodec=mp4a,ab=192,channels=2,soverlay}:standard{access=file,mux=mp4,dst="${this.outputDirectoryPath}/(${options.season}x${this.createPaddedEpisodeNumber(options.episodeNumber)}) - ${options.episodeTitle.replace(/'/g, "\\'")}.mp4"}`;
+    return `"${this.vlcExecutablePath}" --one-instance --no-loop "dvdsimple:///F:/#${options.title}" --no-sout-all --audio-language=eng --sub-language=eng --avcodec-hw=none --run-time=${options.runTime + options.runTime * this.runTimePaddingFactor} --sout=#transcode{vcodec=h264,acodec=mp4a,ab=192,channels=2,soverlay}:standard{access=file,mux=mp4,dst="${this.outputDirectoryPath}/(${options.season}x${this.createPaddedEpisodeNumber(options.episodeNumber)}) - ${options.episodeTitle.replace(/'/g, "\\'")}.mp4"}`;
   }
 
   private createPaddedEpisodeNumber(episodeNumber: number): string {

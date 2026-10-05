@@ -4,7 +4,7 @@ import notifier from "node-notifier";
 import { inject, injectable } from "tsyringe";
 
 import { DiscDrive } from "./disc-drive.mts";
-import { TvdbClient } from "./tvdb-client.mts";
+import { EpisodeMetadata, TvdbClient } from "./tvdb-client.mts";
 import { Vlc } from "./vlc.mts";
 
 interface RippingOptions {
@@ -12,6 +12,12 @@ interface RippingOptions {
   season: number;
   startingEpisode: number;
   title: string;
+}
+
+interface Episode {
+  episodeNumber: number;
+  title: string;
+  runTime: number;
 }
 
 /**
@@ -32,14 +38,22 @@ export class EnhancedDvdRipper {
       console.log(`Ripping DVD for season ${options.season} starting at episode ${options.startingEpisode}.`);
 
       const startingEpisodePosition = Number(options.startingEpisode);
-      const episodes: { episodeNumber: number; title: string }[] = await Promise.all(
-        Array.from(new Array(Number(options.episodeCountPerDisc)), async (_, index) => ({
-          episodeNumber: startingEpisodePosition + index,
-          title: await this.tvdbClient.getEpisodeTitle(options.title, options.season, startingEpisodePosition + index),
-        })),
+      const episodes: Episode[] = await Promise.all(
+        Array.from(new Array(Number(options.episodeCountPerDisc)), async (_, index) => {
+          const episodeMetadata: EpisodeMetadata = await this.tvdbClient.getEpisodeMetadata(
+            options.title,
+            options.season,
+            startingEpisodePosition + index,
+          );
+          return {
+            episodeNumber: startingEpisodePosition + index,
+            title: episodeMetadata.name,
+            runTime: episodeMetadata.runTime,
+          };
+        }),
       );
 
-      for (const { episodeNumber, title: episodeTitle } of episodes) {
+      for (const { episodeNumber, title: episodeTitle, runTime } of episodes) {
         console.log(`Start rip of season ${options.season}, episode ${episodeNumber}.`);
         const index: number = episodes.findIndex((episode) => episodeNumber == episode.episodeNumber);
 
@@ -47,6 +61,7 @@ export class EnhancedDvdRipper {
           season: options.season,
           episodeNumber,
           episodeTitle,
+          runTime,
           title: index + 1,
         });
 

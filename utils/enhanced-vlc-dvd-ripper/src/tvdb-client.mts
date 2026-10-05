@@ -3,13 +3,18 @@ import { inject, injectable } from "tsyringe";
 
 import { InjectionToken } from "./injection-token.enum.mts";
 
+export interface EpisodeMetadata {
+  name: string;
+  runTime: number;
+}
+
 @injectable()
 export class TvdbClient {
   private readonly tvdbBaseUrl: string = "https://api4.thetvdb.com/v4";
 
   constructor(@inject(InjectionToken.TvdbApiKey) private readonly tvdbApiKey: string) {}
 
-  async getEpisodeTitle(seriesName: string, seasonNumber: number, episodeNumber: number): Promise<string> {
+  async getEpisodeMetadata(seriesName: string, seasonNumber: number, episodeNumber: number): Promise<EpisodeMetadata> {
     const token: string = await this.getToken();
 
     const response: Response = await fetch(
@@ -21,7 +26,9 @@ export class TvdbClient {
         method: "GET",
       },
     );
-    return (await response.json()).data.episodes[0].name;
+    const episode = (await response.json()).data.episodes[0];
+
+    return { name: episode.name, runTime: episode.runtime * 60 };
   }
 
   private async getToken(): Promise<string> {
