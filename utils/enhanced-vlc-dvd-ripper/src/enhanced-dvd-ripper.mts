@@ -37,21 +37,7 @@ export class EnhancedDvdRipper {
     try {
       console.log(`Ripping DVD for season ${options.season} starting at episode ${options.startingEpisode}.`);
 
-      const startingEpisodePosition = Number(options.startingEpisode);
-      const episodes: Episode[] = await Promise.all(
-        Array.from(new Array(Number(options.episodeCountPerDisc)), async (_, index) => {
-          const episodeMetadata: EpisodeMetadata = await this.tvdbClient.getEpisodeMetadata(
-            options.title,
-            options.season,
-            startingEpisodePosition + index,
-          );
-          return {
-            episodeNumber: startingEpisodePosition + index,
-            title: episodeMetadata.name,
-            runTime: episodeMetadata.runTime,
-          };
-        }),
-      );
+      const episodes: Episode[] = await this.getEpisodes(options);
 
       for (const { episodeNumber, title: episodeTitle, runTime } of episodes) {
         console.log(`Start rip of season ${options.season}, episode ${episodeNumber}.`);
@@ -80,5 +66,23 @@ export class EnhancedDvdRipper {
     } catch (err) {
       console.error("An error occurred during torrent data extraction: error: ", err);
     }
+  }
+
+  private async getEpisodes(options: RippingOptions): Promise<Episode[]> {
+    const startingEpisodePosition = Number(options.startingEpisode);
+    return await Promise.all(
+      Array.from(new Array(Number(options.episodeCountPerDisc)), async (_, index) => {
+        const episodeMetadata: EpisodeMetadata = await this.tvdbClient.getEpisodeMetadata(
+          options.title,
+          options.season,
+          startingEpisodePosition + index,
+        );
+        return {
+          episodeNumber: startingEpisodePosition + index,
+          title: episodeMetadata.name,
+          runTime: episodeMetadata.runTime,
+        };
+      }),
+    );
   }
 }
