@@ -18,7 +18,7 @@ export class Vlc {
 
   private validate(options: VlcOptions): void | never {
     Object.entries(options)
-      .filter(([key]) => key !== "episodeTitle")
+      .filter(([key]) => key !== "episodeTitle" && key !== "runTime")
       .forEach(([key, value]) => this.validateNumberArgument(key as keyof VlcOptions, value));
   }
 

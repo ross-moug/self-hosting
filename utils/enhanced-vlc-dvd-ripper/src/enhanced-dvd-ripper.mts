@@ -8,9 +8,10 @@ import { EpisodeMetadata, TvdbClient } from "./tvdb-client.mts";
 import { Vlc } from "./vlc.mts";
 
 interface RippingOptions {
+  discStartingEpisode: number;
   episodeCountPerDisc: number;
+  episodeOffset: number;
   season: number;
-  startingEpisode: number;
   title: string;
 }
 
@@ -35,9 +36,10 @@ export class EnhancedDvdRipper {
 
   async rip(options: RippingOptions): Promise<void> {
     try {
-      console.log(`Ripping DVD for season ${options.season} starting at episode ${options.startingEpisode}.`);
+      console.log(`Ripping DVD for season ${options.season} starting at episode ${options.discStartingEpisode}.`);
 
       const episodes: Episode[] = await this.getEpisodes(options);
+      console.log("episodes: ", episodes);
 
       for (const { episodeNumber, title: episodeTitle, runTime } of episodes) {
         console.log(`Start rip of season ${options.season}, episode ${episodeNumber}.`);
@@ -69,17 +71,18 @@ export class EnhancedDvdRipper {
   }
 
   private async getEpisodes(options: RippingOptions): Promise<Episode[]> {
-    const startingEpisodePosition = Number(options.startingEpisode);
+    const startingEpisodePosition = Number(options.discStartingEpisode);
     return await Promise.all(
-      Array.from(new Array(Number(options.episodeCountPerDisc)), async (_, index) => {
+      Array.from(new Array(Number(options.episodeCountPerDisc - options.episodeOffset)), async (_, index) => {
+        const episodeNumber: number = startingEpisodePosition + index + options.episodeOffset;
         const episodeMetadata: EpisodeMetadata = await this.tvdbClient.getEpisodeMetadata(
           options.title,
           options.season,
-          startingEpisodePosition + index,
+          startingEpisodePosition + index + options.episodeOffset,
         );
 
         return {
-          episodeNumber: startingEpisodePosition + index,
+          episodeNumber,
           title: episodeMetadata.name,
           runTime: episodeMetadata.runTime,
         };
