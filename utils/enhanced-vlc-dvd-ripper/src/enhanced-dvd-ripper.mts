@@ -16,8 +16,8 @@ interface RippingOptions {
 
 interface Episode {
   episodeNumber: number;
-  title: string;
-  runTime: number;
+  title?: string | undefined;
+  runTime?: number | undefined;
 }
 
 /**
@@ -64,7 +64,7 @@ export class EnhancedDvdRipper {
         appID: "Enhanced DVD Ripper",
       });
     } catch (err) {
-      console.error("An error occurred during torrent data extraction: error: ", err);
+      console.error("An error occurred during DVD ripping: error: ", err);
     }
   }
 
@@ -77,6 +77,7 @@ export class EnhancedDvdRipper {
           options.season,
           startingEpisodePosition + index,
         );
+
         return {
           episodeNumber: startingEpisodePosition + index,
           title: episodeMetadata.name,

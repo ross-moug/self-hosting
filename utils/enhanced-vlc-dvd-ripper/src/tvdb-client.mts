@@ -4,8 +4,22 @@ import { inject, injectable } from "tsyringe";
 import { InjectionToken } from "./injection-token.enum.mts";
 
 export interface EpisodeMetadata {
-  name: string;
-  runTime: number;
+  name?: string;
+  runTime?: number;
+}
+
+const enum ContentType {
+  Json = "application/json",
+}
+
+const enum Header {
+  Authorization = "Authorization",
+  ContentType = "Content-Type",
+}
+
+const enum HttpMethod {
+  Get = "GET",
+  Post = "POST",
 }
 
 @injectable()
@@ -15,20 +29,25 @@ export class TvdbClient {
   constructor(@inject(InjectionToken.TvdbApiKey) private readonly tvdbApiKey: string) {}
 
   async getEpisodeMetadata(seriesName: string, seasonNumber: number, episodeNumber: number): Promise<EpisodeMetadata> {
-    const token: string = await this.getToken();
+    try {
+      const token: string = await this.getToken();
 
-    const response: Response = await fetch(
-      `${this.tvdbBaseUrl}/series/${await this.getSeriesId(seriesName, token)}/episodes/official?page=0&season=${seasonNumber}&episodeNumber=${episodeNumber}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response: Response = await fetch(
+        `${this.tvdbBaseUrl}/series/${await this.getSeriesId(seriesName, token)}/episodes/official?page=0&season=${seasonNumber}&episodeNumber=${episodeNumber}`,
+        {
+          headers: {
+            [Header.Authorization]: `Bearer ${token}`,
+          },
+          method: HttpMethod.Get,
         },
-        method: "GET",
-      },
-    );
-    const episode = (await response.json()).data.episodes[0];
+      );
+      const episode = (await response.json()).data.episodes[0];
 
-    return { name: episode.name, runTime: episode.runtime * 60 };
+      return { name: episode.name, runTime: episode.runtime * 60 };
+    } catch (err) {
+      console.error("An error occurred during TV series data retrieval: error: ", err);
+      return {};
+    }
   }
 
   private async getToken(): Promise<string> {
@@ -37,9 +56,9 @@ export class TvdbClient {
         apikey: this.tvdbApiKey.trim(),
       }),
       headers: {
-        "Content-Type": "application/json",
+        [Header.ContentType]: ContentType.Json,
       },
-      method: "POST",
+      method: HttpMethod.Post,
     });
     return (await loginResponse.json()).data.token;
   }
@@ -47,9 +66,9 @@ export class TvdbClient {
   private async getSeriesId(seriesName: string, token: string): Promise<string> {
     const slugResponse: Response = await fetch(`${this.tvdbBaseUrl}/series/slug/${this.createSeriesSlug(seriesName)}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        [Header.Authorization]: `Bearer ${token}`,
       },
-      method: "GET",
+      method: HttpMethod.Get,
     });
     return (await slugResponse.json()).data.id;
   }
