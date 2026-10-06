@@ -17,8 +17,8 @@ export class VlcCommandFactory {
 
   create(options: VlcOptions): string {
     return options?.runTime
-      ? `"${this.vlcExecutablePath}" "dvdsimple:///F:/#${options.title}-1" --sout-all --run-time=${options.runTime + options.runTime * this.runTimePaddingFactor} --sout=#standard{access=file,mux=mp4,dst="${this.outputDirectoryPath}/${this.createFileName(options)}"} vlc://quit`
-      : `"${this.vlcExecutablePath}" "dvdsimple:///F:/#${options.title}-1" --sout-all --sout=#standard{access=file,mux=mp4,dst="${this.outputDirectoryPath}/${this.createFileName(options)}"} vlc://quit`;
+      ? `"${this.vlcExecutablePath}" "dvdsimple:///F:/#${options.title}" --sout-all --run-time=${options.runTime + options.runTime * this.runTimePaddingFactor} --sout=#standard{access=file,mux=mp4,dst="${this.outputDirectoryPath}/${this.createFileName(options)}"} vlc://quit`
+      : `"${this.vlcExecutablePath}" "dvdsimple:///F:/#${options.title}" --sout-all --sout=#standard{access=file,mux=mp4,dst="${this.outputDirectoryPath}/${this.createFileName(options)}"} vlc://quit`;
   }
 
   private createFileName(options: VlcOptions): string {

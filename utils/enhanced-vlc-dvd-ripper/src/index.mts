@@ -10,6 +10,7 @@ config();
 container.registerSingleton(EnhancedDvdRipper);
 container.register(InjectionToken.DiskDrive, { useValue: process.env.DISK_DRIVE });
 container.register(InjectionToken.EpisodeCountPerDisc, { useValue: process.env.EPISODE_COUNT_PER_DISC });
+container.register(InjectionToken.EpisodeCountToRip, { useValue: process.env.EPISODE_COUNT_TO_RIP });
 container.register(InjectionToken.EpisodeOffset, { useValue: process.env.EPISODE_OFFSET });
 container.register(InjectionToken.OutputDirectoryPath, {
   useValue: process.env.OUTPUT_DIRECTORY_PATH?.replaceAll("\\", "/"),
@@ -22,10 +23,14 @@ container.register(InjectionToken.VlcExecutablePath, { useValue: process.env.VLC
 
 try {
   const enhancedDvdRipper: EnhancedDvdRipper = container.resolve(EnhancedDvdRipper);
+  const episodeCountPerDisc = Number(container.resolve(InjectionToken.EpisodeCountPerDisc));
+  const episodeOffset = Number(container.resolve(InjectionToken.EpisodeOffset));
   await enhancedDvdRipper.rip({
     discStartingEpisode: Number(container.resolve(InjectionToken.StartingEpisode)),
-    episodeCountPerDisc: Number(container.resolve(InjectionToken.EpisodeCountPerDisc)),
-    episodeOffset: Number(container.resolve(InjectionToken.EpisodeOffset)),
+    episodeCountPerDisc: episodeCountPerDisc,
+    episodeCountToRip:
+      Number(container.resolve(InjectionToken.EpisodeCountToRip)) || episodeCountPerDisc - episodeOffset,
+    episodeOffset: episodeOffset,
     season: Number(container.resolve(InjectionToken.Season)),
     title: container.resolve(InjectionToken.Title),
   });

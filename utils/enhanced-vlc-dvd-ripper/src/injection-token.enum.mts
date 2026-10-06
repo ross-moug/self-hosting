@@ -1,6 +1,7 @@
 export enum InjectionToken {
   DiskDrive = "DISK_DRIVE",
   EpisodeCountPerDisc = "EPISODE_COUNT_PER_DISC",
+  EpisodeCountToRip = "EPISODE_COUNT_TO_RIP",
   EpisodeOffset = "EPISODE_OFFSET",
   OutputDirectoryPath = "OUTPUT_DIRECTORY_PATH",
   Season = "SEASON",
