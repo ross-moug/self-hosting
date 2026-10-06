@@ -44,7 +44,6 @@ export class EnhancedDvdRipper {
       console.log(`Ripping DVD for season ${options.season} starting at episode ${options.discStartingEpisode}.`);
 
       const episodes: Episode[] = await this.getEpisodes(options);
-      console.log("episodes: ", episodes);
 
       for (const { episodeNumber, title: episodeTitle, runTime } of episodes) {
         console.log(`Start rip of season ${options.season}, episode ${episodeNumber}.`);
