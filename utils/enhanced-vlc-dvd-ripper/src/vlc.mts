@@ -11,7 +11,7 @@ export class Vlc {
   constructor(@inject(VlcCommandFactory) private readonly vlcCommandFactory: VlcCommandFactory) {}
 
   execute(options: VlcOptions): void | never {
-    this.validate(options);
+    // this.validate(options);
 
     execSync(this.vlcCommandFactory.create(options), { stdio: "pipe" });
   }

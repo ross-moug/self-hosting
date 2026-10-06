@@ -2,24 +2,11 @@ import "reflect-metadata";
 import { inject, injectable } from "tsyringe";
 
 import { InjectionToken } from "./injection-token.enum.mts";
+import { ContentType, Header, HttpMethod } from "./api.mts";
 
 export interface EpisodeMetadata {
   name?: string;
   runTime?: number;
-}
-
-const enum ContentType {
-  Json = "application/json",
-}
-
-const enum Header {
-  Authorization = "Authorization",
-  ContentType = "Content-Type",
-}
-
-const enum HttpMethod {
-  Get = "GET",
-  Post = "POST",
 }
 
 @injectable()

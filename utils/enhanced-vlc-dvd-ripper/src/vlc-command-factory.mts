@@ -2,6 +2,7 @@ import { inject, injectable } from "tsyringe";
 
 import { InjectionToken } from "./injection-token.enum.mts";
 import type { VlcOptions } from "./vlc-options.mts";
+import { RipType } from "./rip.mts";
 
 @injectable()
 export class VlcCommandFactory {
@@ -22,13 +23,17 @@ export class VlcCommandFactory {
   }
 
   private createFileName(options: VlcOptions): string {
-    const baseFileName = `(${options.season}x${this.createPaddedEpisodeNumber(options.episodeNumber)})`;
-    return (
-      options.episodeTitle ? `${baseFileName} - ${options.episodeTitle.replace(/'/g, "\\'")}` : `${baseFileName}`
-    ).concat(this.fileExtension);
+    if (options.type === RipType.Tv) {
+      const baseFileName = `(${options.season}x${this.createPaddedEpisodeNumber(options.episodeNumber)})`;
+      return (
+        options.mediaTitle ? `${baseFileName} - ${options.mediaTitle.replace(/'/g, "\\'")}` : `${baseFileName}`
+      ).concat(this.fileExtension);
+    } else {
+      return `${options.mediaTitle}${this.fileExtension}`;
+    }
   }
 
-  private createPaddedEpisodeNumber(episodeNumber: number): string {
+  private createPaddedEpisodeNumber(episodeNumber: number | undefined): string {
     return String(episodeNumber).padStart(this.episodeNumberLength, this.episodePaddingCharacter);
   }
 }
