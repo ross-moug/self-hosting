@@ -1,5 +1,6 @@
 import "reflect-metadata";
 
+import { platform } from "node:os";
 import notifier from "node-notifier";
 import { inject, injectable } from "tsyringe";
 
@@ -35,6 +36,10 @@ export class EnhancedDvdRipper {
   ) {}
 
   async rip(options: RippingOptions): Promise<void> {
+    if (platform() !== "win32") {
+      throw new Error("Unsupported OS! Only Windows is supported");
+    }
+
     try {
       console.log(`Ripping DVD for season ${options.season} starting at episode ${options.discStartingEpisode}.`);
 
