@@ -15,6 +15,7 @@
     "nircmd": "^2.0.0",
     "node-notifier": "^10.0.1",
     "reflect-metadata": "^0.2.2",
+    "systeminformation": "^5.33.15",
     "tsyringe": "^4.10.0"
   },
   "devDependencies": {

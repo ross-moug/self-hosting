@@ -2,6 +2,7 @@ import "reflect-metadata";
 
 import { platform } from "node:os";
 import notifier from "node-notifier";
+import { blockDevices } from "systeminformation";
 import { inject, injectable } from "tsyringe";
 
 import { DiscDrive } from "./disc-drive.mts";
@@ -22,6 +23,10 @@ interface Episode {
   runTime?: number | undefined;
 }
 
+const enum PhysicalDriveType {
+  CdDvd = "CD/DVD",
+}
+
 /**
  * TODO
  * - Film support
@@ -38,6 +43,8 @@ export class EnhancedDvdRipper {
   async rip(options: RippingOptions): Promise<void> {
     if (platform() !== "win32") {
       throw new Error("Unsupported OS! Only Windows is supported");
+    } else if (!(await this.hasDisc())) {
+      throw new Error("No DVD present!");
     }
 
     try {
@@ -72,6 +79,10 @@ export class EnhancedDvdRipper {
     } catch (err) {
       console.error("An error occurred during DVD ripping: error: ", err);
     }
+  }
+
+  private async hasDisc(): Promise<boolean> {
+    return (await blockDevices()).some(({ physical, label }) => physical === PhysicalDriveType.CdDvd && label);
   }
 
   private async getEpisodes(options: RippingOptions): Promise<Episode[]> {
