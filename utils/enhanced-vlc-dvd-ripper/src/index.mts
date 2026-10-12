@@ -5,6 +5,9 @@ import { container } from "tsyringe";
 import { EnhancedDvdRipper } from "./enhanced-dvd-ripper.mts";
 import { InjectionToken } from "./injection-token.enum.mts";
 import { FilmStrategy } from "./film-strategy.mts";
+import { RipType } from "./rip.mts";
+import { Strategy } from "./strategy.mts";
+import { TvSeriesStrategy } from "./tv-series-strategy.mts";
 
 config();
 
@@ -17,6 +20,7 @@ container.register(InjectionToken.OmdbApiKey, { useValue: process.env.OMDB_API_K
 container.register(InjectionToken.OutputDirectoryPath, {
   useValue: process.env.OUTPUT_DIRECTORY_PATH?.replaceAll("\\", "/"),
 });
+container.register(InjectionToken.RipType, { useValue: process.env.RIP_TYPE });
 container.register(InjectionToken.Season, { useValue: process.env.SEASON });
 container.register(InjectionToken.StartingEpisode, { useValue: process.env.STARTING_EPISODE });
 container.register(InjectionToken.Title, { useValue: process.env.TITLE });
@@ -24,6 +28,13 @@ container.register(InjectionToken.TvdbApiKey, { useValue: process.env.TVDB_API_K
 container.register(InjectionToken.VlcExecutablePath, { useValue: process.env.VLC_EXECUTABLE_PATH });
 
 try {
+  const ripType: RipType | unknown = container.resolve(InjectionToken.RipType);
+  if (!Object.values(RipType).includes(ripType as RipType)) {
+    throw new Error("Invalid RIP_TYPE!");
+  }
+
+  const strategy: Strategy =
+    ripType === RipType.Tv ? container.resolve(TvSeriesStrategy) : container.resolve(FilmStrategy);
   const enhancedDvdRipper: EnhancedDvdRipper = container.resolve(EnhancedDvdRipper);
   const episodeCountPerDisc = Number(container.resolve(InjectionToken.EpisodeCountPerDisc));
   const episodeOffset = Number(container.resolve(InjectionToken.EpisodeOffset));
@@ -37,8 +48,7 @@ try {
       season: Number(container.resolve(InjectionToken.Season)),
       title: container.resolve(InjectionToken.Title),
     },
-    // TODO set dynamically
-    container.resolve(FilmStrategy),
+    strategy,
   );
 } catch (err) {
   console.error("An error occurred: ", err);

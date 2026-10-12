@@ -5,6 +5,7 @@ export enum InjectionToken {
   EpisodeOffset = "EPISODE_OFFSET",
   OmdbApiKey = "OMDB_API_KEY",
   OutputDirectoryPath = "OUTPUT_DIRECTORY_PATH",
+  RipType = "RIP_TYPE",
   Season = "SEASON",
   StartingEpisode = "STARTING_EPISODE",
   Title = "TITLE",

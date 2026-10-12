@@ -7,7 +7,7 @@ export interface RippingOptions {
   title: string;
 }
 
-export const enum RipType {
+export enum RipType {
   Film = "FILM",
   Tv = "TV",
 }
