@@ -9,7 +9,6 @@ import { Strategy } from "./strategy.mts";
 
 /**
  * TODO
- * - Film support
  * - Tests
  */
 @injectable()

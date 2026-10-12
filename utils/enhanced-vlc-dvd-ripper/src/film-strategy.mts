@@ -27,15 +27,14 @@ export class FilmStrategy implements Strategy {
 
       const metadata: FilmMetadata = await this.getMetadata(options);
 
-      console.log("metadata: ", metadata);
-      // this.vlc.execute({
-      //   mediaTitle: metadata.title,
-      //   runTime: metadata.runTime,
-      //   title: 1,
-      //   type: RipType.Film,
-      // });
+      this.vlc.execute({
+        mediaTitle: metadata.title,
+        runTime: metadata.runTime,
+        title: 1,
+        type: RipType.Film,
+      });
 
-      // await this.discDrive.eject();
+      await this.discDrive.eject();
 
       console.log(`DVD rip complete.`);
       notifier.notify({
