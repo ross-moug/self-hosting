@@ -38,7 +38,7 @@ export class TvSeriesStrategy implements Strategy {
           episodeNumber,
           mediaTitle: episodeTitle,
           runTime,
-          title: index + 1 + (options?.episodeOffset || 0),
+          title: index + 2 + (options?.episodeOffset || 0),
           type: RipType.Tv,
         });
 
