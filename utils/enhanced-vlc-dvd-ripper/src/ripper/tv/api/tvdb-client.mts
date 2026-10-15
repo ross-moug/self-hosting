@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import { inject, injectable } from "tsyringe";
 
-import { InjectionToken } from "./injection-token.enum.mts";
-import { ContentType, Header, HttpMethod } from "./api.mts";
+import { InjectionToken } from "../../../injection-token.enum.mts";
+import { ContentType, Header, HttpMethod } from "../../api.mts";
 
 export interface EpisodeMetadata {
   name?: string;

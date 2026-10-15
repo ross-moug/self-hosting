@@ -1,4 +1,4 @@
-import { RipType } from "./rip.mts";
+import { RipType } from "../rip.mts";
 
 export interface VlcOptions {
   season?: number | undefined;

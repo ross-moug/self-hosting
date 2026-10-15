@@ -1,8 +1,9 @@
 import { inject, injectable } from "tsyringe";
 
-import { InjectionToken } from "./injection-token.enum.mts";
+import { InjectionToken } from "../../injection-token.enum.mts";
+import { RipType } from "../rip.mts";
+
 import type { VlcOptions } from "./vlc-options.mts";
-import { RipType } from "./rip.mts";
 
 @injectable()
 export class VlcCommandFactory {

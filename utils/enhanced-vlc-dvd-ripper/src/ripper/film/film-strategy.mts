@@ -3,12 +3,13 @@ import "reflect-metadata";
 import notifier from "node-notifier";
 import { inject, injectable } from "tsyringe";
 
-import { DiscDrive } from "./disc-drive.mts";
+import { DiscDrive } from "../../util/disc-drive.mts";
+import { RippingOptions, RipType } from "../rip.mts";
+import { Strategy } from "../strategy.mts";
+import { Vlc } from "../vlc/vlc.mts";
+
+import { OmdbClient } from "./api/omdb-client.mts";
 import { FilmMetadata } from "./film.mts";
-import { OmdbClient } from "./omdb-client.mts";
-import { RippingOptions, RipType } from "./rip.mts";
-import { Strategy } from "./strategy.mts";
-import { Vlc } from "./vlc.mts";
 
 /**
  * TODO Tests

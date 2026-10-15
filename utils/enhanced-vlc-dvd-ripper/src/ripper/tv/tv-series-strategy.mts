@@ -3,12 +3,13 @@ import "reflect-metadata";
 import notifier from "node-notifier";
 import { inject, injectable } from "tsyringe";
 
-import { DiscDrive } from "./disc-drive.mts";
-import { RippingOptions, RipType } from "./rip.mts";
-import { Strategy } from "./strategy.mts";
-import { EpisodeMetadata, TvdbClient } from "./tvdb-client.mts";
+import { DiscDrive } from "../../util/disc-drive.mts";
+import { RippingOptions, RipType } from "../rip.mts";
+import { Strategy } from "../strategy.mts";
+import { Vlc } from "../vlc/vlc.mts";
+
+import { EpisodeMetadata, TvdbClient } from "./api/tvdb-client.mts";
 import { TvSeriesMetadata } from "./tv-series.mts";
-import { Vlc } from "./vlc.mts";
 
 /**
  * TODO Tests
