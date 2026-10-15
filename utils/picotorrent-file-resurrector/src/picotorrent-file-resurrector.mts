@@ -16,9 +16,9 @@ interface TorrentMetadata {
 /**
  * Extract torrent data from the PicoTorrent DB and store as fresh `.torrent` files.
  *
- * Main motivation for this util was due to PicoTorrent hanging on torrent download, [this issue](https://github.com/picotorrent/picotorrent/issues/1249#issuecomment-2712050237)
+ * The main motivation for this util was due to PicoTorrent hanging on torrent download, [this issue](https://github.com/picotorrent/picotorrent/issues/1249#issuecomment-2712050237)
  * advised recreating the torrent files with the data already downloaded for use in a different torrent client. In this
- * case there was no existing `.torrent` files as they were added via magnet links.
+ * case there were no existing `.torrent` files as they were added via magnet links.
  *
  * @see [PicoTorrent GitHub issue](https://github.com/picotorrent/picotorrent/issues/1249#issuecomment-2712050237)
  * @see [`node-sqlite` docs](https://github.com/thelocalbranch/node-sqlite#usage)
@@ -43,24 +43,27 @@ export class PicotorrentFileResurrector {
         mode: sqlite3.OPEN_READONLY,
       });
 
-      await db.each<TorrentMetadata>(
-        this.statementQuery,
-        (err, { info_hash: infoHash = "", resume_data: resumeData = "" }) => {
-          if (!err) {
-            const outputDir: string = this.baseOutputDirPath;
-            const filePath: string = path.join(outputDir, `${infoHash}.torrent`);
-            writeFileSync(filePath, resumeData);
-            console.log(`Torrent file created in "${outputDir}" for torrent with info has "${infoHash}".`);
-          } else {
-            console.error("An error occurred during torrent data extraction: error: ", err);
-          }
-        },
-      );
+      const affectedRowCount =
+        (await db.each<TorrentMetadata>(
+          this.statementQuery,
+          (err, { info_hash: infoHash = "", resume_data: resumeData = "" }) => {
+            if (!err) {
+              const outputDir: string = this.baseOutputDirPath;
+              const filePath: string = path.join(outputDir, `${infoHash}.torrent`);
+              writeFileSync(filePath, resumeData);
+              console.log(`Torrent file created in "${outputDir}" for torrent with info has "${infoHash}".`);
+            } else {
+              console.error("An error occurred during torrent data from DB: error: ", err);
+            }
+          },
+        )) || 0;
+
+      console.log(`${affectedRowCount} torrent(s) resurrected!`);
     } catch (err) {
       console.error("An error occurred during torrent data extraction: error: ", err);
     } finally {
       await db?.close();
-      console.log(`DB connection closed.`);
+      console.log("DB connection closed.");
     }
   }
 }
